@@ -1,0 +1,10 @@
+[
+    {
+        "role": "user",
+        "content": "where is taj mahal?"
+    },
+    {
+        "role": "assistant",
+        "content": "The Taj Mahal is located on the right bank of the Yamuna River in the city of Agra, Uttar Pradesh, India."
+    }
+]
