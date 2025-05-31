@@ -81,6 +81,7 @@ def YoutubeSearch(Topic):
 def PlayYoutube(query):
     playonyt(query)
     return True
+PlayYoutube("hikaru nara")
 def OpenApp(app, sess=requests.session()):
     try:
         # First try using AppOpener
