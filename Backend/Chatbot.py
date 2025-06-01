@@ -1,121 +1,140 @@
-from groq import Groq
-from json import load, dump
-import datetime
+import cohere
 from dotenv import dotenv_values
+import sys
+from rich import print
+from .Model import FirstLayerDMM
+from .RealtimeSearchEngine import RealtimeSearchEngine
+from .Automation import Automation
+from .TextToSpeech import TextToSpeech
 
-env_vars =dotenv_values(".env")
+class ChatBot:
+    def __init__(self):
+        # Load environment variables
+        env_vars = dotenv_values(".env")
+        self.cohere_api_key = env_vars.get("CohereAPIKey")
+        if not self.cohere_api_key:
+            print("[red]Error: CohereAPIKey not found in .env file[/red]")
+            sys.exit(1)
 
-Username = env_vars.get("Username")
-Assistantname = env_vars.get("Assistantname")
-GroqAPIKey = env_vars.get("GroqAPIKey")
+        try:
+            self.co = cohere.Client(api_key=self.cohere_api_key)
+        except Exception as e:
+            print(f"[red]Error initializing Cohere client: {str(e)}[/red]")
+            sys.exit(1)
 
-client=Groq(api_key=GroqAPIKey)
+        # Initialize components
+        self.decision_model = FirstLayerDMM()
+        self.search_engine = RealtimeSearchEngine()
+        self.automation = Automation()
+        self.tts = TextToSpeech()
 
-messages= []
+        # Chat history
+        self.chat_history = []
 
-System = f"""Hello, I am {Username}, You are a very accurate and advanced AI chatbot named {Assistantname} which also has real-time up-to-date information from the internet.
-*** Do not tell time until I ask, do not talk too much, just answer the question.***
-*** Reply in only English, even if the question is in Hindi, reply in English.***
-*** Do not provide notes in the output, just answer the question and never mention your training data. ***
-"""
+    def process_message(self, message):
+        """Process a user message and return the appropriate response."""
+        try:
+            # Get decision from FirstLayerDMM
+            decisions = self.decision_model(message)
+            print(f"[blue]Decisions: {decisions}[/blue]")
 
-SystemChatBot =[
-    {"role": "system","content":System}
-]
+            responses = []
+            for decision in decisions:
+                if decision.startswith("general"):
+                    # Handle general queries using Cohere
+                    response = self.co.chat(
+                        model='command-r-plus',
+                        message=message,
+                        temperature=0.7,
+                        chat_history=self.chat_history
+                    )
+                    responses.append(response.text)
+                    self.chat_history.append({"role": "user", "message": message})
+                    self.chat_history.append({"role": "assistant", "message": response.text})
 
-try:
-    with open(r"Data\ChatLog.json", "r") as f:
-        message = load(f)
-except FileNotFoundError:
+                elif decision.startswith("realtime"):
+                    # Handle realtime queries using search engine
+                    query = decision.split("realtime ")[1]
+                    response = self.search_engine.search(query)
+                    responses.append(response)
 
-    with open(r"Data\ChatLog.json","w")as f:
-        dump([],f)
+                elif decision.startswith("open"):
+                    # Handle opening applications/websites
+                    target = decision.split("open ")[1]
+                    self.automation.open_application(target)
+                    responses.append(f"Opening {target}")
 
-def RealtimeInformation():
-    current_date_time = datetime.datetime.now()
-    day= current_date_time.strftime("%A")
-    date= current_date_time.strftime("%d")
-    month=current_date_time.strftime("%B")
-    year=current_date_time.strftime("%Y")
-    hour=current_date_time.strftime("%H")
-    minute=current_date_time.strftime("%M")
-    second=current_date_time.strftime("%S")
+                elif decision.startswith("close"):
+                    # Handle closing applications
+                    target = decision.split("close ")[1]
+                    self.automation.close_application(target)
+                    responses.append(f"Closing {target}")
 
+                elif decision.startswith("play"):
+                    # Handle playing music
+                    song = decision.split("play ")[1]
+                    self.automation.play_music(song)
+                    responses.append(f"Playing {song}")
 
-    data=f"Please use this real-time information if needed,\n"
-    data += f"Day: {day}\nDate:{date}\nMonth:{month}\nYear:{year}\n"
-    data += f"Time:{hour} hours:{minute}:{second}seconds.\n"
-    return data
+                elif decision.startswith("generate"):
+                    # Handle image generation
+                    prompt = decision.split("generate ")[1]
+                    response = self.automation.generate_image(prompt)
+                    responses.append(f"Generated image for: {prompt}")
 
-def AnswerModifier(Answer):
-    """Modifies and cleans up the chatbot's response.
-    
-    Args:
-        Answer (str): The raw response from the chatbot
-        
-    Returns:
-        str: Cleaned and formatted response
-    """
-    # Remove any trailing whitespace
-    Answer = Answer.strip()
-    
-    # Remove any special tokens or markers
-    Answer = Answer.replace("</s>", "")
-    Answer = Answer.replace("<|im_end|>", "")
-    Answer = Answer.replace("<|im_start|>", "")
-    
-    # Ensure proper sentence endings
-    if not Answer.endswith(('.', '!', '?')):
-        Answer += '.'
-    
-    # Remove any duplicate newlines
-    Answer = '\n'.join(line for line in Answer.split('\n') if line.strip())
-    
-    # Capitalize the first letter of the response
-    if Answer:
-        Answer = Answer[0].upper() + Answer[1:]
-    
-    return Answer
+                elif decision.startswith("reminder"):
+                    # Handle setting reminders
+                    reminder = decision.split("reminder ")[1]
+                    self.automation.set_reminder(reminder)
+                    responses.append(f"Set reminder: {reminder}")
 
-def ChatBot(Query):
-    """This Funcion send the user's query to the chatbot and returns the AI's response. """
+                elif decision.startswith("system"):
+                    # Handle system commands
+                    command = decision.split("system ")[1]
+                    self.automation.execute_system_command(command)
+                    responses.append(f"Executed system command: {command}")
 
-    try:
-        with open(r"Data\ChatLog.json","r")as f:
-            messages= load(f)
+                elif decision.startswith("content"):
+                    # Handle content generation
+                    topic = decision.split("content ")[1]
+                    response = self.co.generate(
+                        model='command-r-plus',
+                        prompt=f"Write content about: {topic}",
+                        temperature=0.7
+                    )
+                    responses.append(response.text)
 
-            messages.append({"role":"user","content": f"{Query}"})
+                elif decision.startswith("google search"):
+                    # Handle Google searches
+                    query = decision.split("google search ")[1]
+                    self.automation.google_search(query)
+                    responses.append(f"Searching Google for: {query}")
 
-            completion = client.chat.completions.create(
-                model="llama3-70b-8192",
-                messages=SystemChatBot + [{"role":"system","content": RealtimeInformation()}] + messages,
-                max_tokens=1024,
-                temperature=0.7,
-                top_p=1,
-                stream=True,
-                stop=None
-            )
+                elif decision.startswith("youtube search"):
+                    # Handle YouTube searches
+                    query = decision.split("youtube search ")[1]
+                    self.automation.youtube_search(query)
+                    responses.append(f"Searching YouTube for: {query}")
 
-        Answer = "" 
-        for chunk in completion:
-            if chunk.choices[0].delta.content:
-                Answer += chunk.choices[0].delta.content
-        Answer = Answer.replace("</s>","")
+                elif decision == "exit":
+                    responses.append("Goodbye!")
+                    return "Goodbye!"
 
-        messages.append({"role": "assistant","content": Answer})
+            # Combine all responses
+            final_response = " ".join(responses)
+            
+            # Convert response to speech
+            self.tts.speak(final_response)
+            
+            return final_response
 
-        with open(r"Data\ChatLog.json", "w") as f:
-            dump(messages, f, indent=4)
+        except Exception as e:
+            error_msg = f"Error processing message: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            return error_msg
 
-        return AnswerModifier(Answer=Answer)
-    except Exception as e:
-
-        print(f"Error:{e}")
-        with open(r"Data\ChangeLog.json","w") as f:
-            dump([],f,indent=4)
-            return ChatBot(Query)
-        
 if __name__=="__main__":
+    chatbot = ChatBot()
     while True:
         user_input= input("Enter Your Question: ")
-        print(ChatBot(user_input))
+        print(chatbot.process_message(user_input))

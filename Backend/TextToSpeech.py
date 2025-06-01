@@ -4,6 +4,9 @@ import asyncio
 import edge_tts
 import os
 from dotenv import dotenv_values
+import pyttsx3
+from rich import print
+import sys
 
 env_vars = dotenv_values(".env")
 AssistantVoice = env_vars.get("AssitantVoice")
@@ -89,6 +92,36 @@ def TextToSpeech(Text, func=lambda r=None: True):
         TTS(" ".join(Text.split(".")[0:2]) + "." + random.choice(responses), func)
     else:
         TTS(Text, func)
+
+class TextToSpeech:
+    def __init__(self):
+        try:
+            self.engine = pyttsx3.init()
+            # Configure voice properties
+            self.engine.setProperty('rate', 150)  # Speed of speech
+            self.engine.setProperty('volume', 1.0)  # Volume (0.0 to 1.0)
+            
+            # Get available voices and set a female voice if available
+            voices = self.engine.getProperty('voices')
+            for voice in voices:
+                if 'female' in voice.name.lower():
+                    self.engine.setProperty('voice', voice.id)
+                    break
+            
+        except Exception as e:
+            error_msg = f"Error initializing text-to-speech engine: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            sys.exit(1)
+
+    def speak(self, text):
+        """Convert text to speech."""
+        try:
+            self.engine.say(text)
+            self.engine.runAndWait()
+        except Exception as e:
+            error_msg = f"Error in text-to-speech: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            raise
 
 if __name__ == "__main__":
     try:

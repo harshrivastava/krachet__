@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRACHET - Help</title>
+    <link rel="icon" type="image/x-icon" href="Assets/icon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen">
+    <!-- Top Bar -->
+    <div class="bg-gradient-to-r p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <div class="title-container">
+                <img src="Assets/icon.ico" alt="KRACHET" class="top-bar-icon">
+                <h1 class="text-xl animated-gradient">KRACHET</h1>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button onclick="window.location.href='index.html'" class="px-4 py-2 bg-[#0095ff]/10 hover:bg-[#0095ff]/20 rounded transition-all">
+                <span class="flex items-center text-white">
+                    <i class="fas fa-home w-5 h-5 mr-2"></i>
+                    Home
+                </span>
+            </button>
+            <button onclick="window.location.href='about.html'" class="px-4 py-2 bg-[#0095ff]/10 hover:bg-[#0095ff]/20 rounded transition-all">
+                <span class="flex items-center text-white">
+                    <i class="fas fa-info-circle w-5 h-5 mr-2"></i>
+                    About
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl animated-gradient mb-8 text-center">Help Center</h2>
+            
+            <!-- FAQ Section -->
+            <div class="space-y-6">
+                <div class="help-card">
+                    <h3 class="text-xl font-semibold mb-4 glow-text">Getting Started</h3>
+                    <div class="space-y-4">
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">How to use KRACHET?</h4>
+                            <p class="text-gray-300">Simply click the microphone button and start speaking, or type your message in the chat interface. KRACHET will respond to your queries in real-time. The system is designed to understand natural language, so you can speak or type as you would normally communicate.</p>
+                        </div>
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">Voice Commands</h4>
+                            <p class="text-gray-300">KRACHET supports various voice commands. Try saying "help" to get a list of available commands. You can also use commands like "clear chat" to start a new conversation or "switch to text" to change input methods.</p>
+                        </div>
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">First-time Setup</h4>
+                            <p class="text-gray-300">When you first use KRACHET, you'll need to grant microphone permissions in your browser. Click "Allow" when prompted to enable voice interaction. You can change these permissions later in your browser settings.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="help-card">
+                    <h3 class="text-xl font-semibold mb-4 glow-text">Features</h3>
+                    <div class="space-y-4">
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">Voice Recognition</h4>
+                            <p class="text-gray-300">Our advanced voice recognition system can understand natural language and respond accordingly. The system supports multiple languages and accents, with continuous learning capabilities to improve accuracy over time.</p>
+                        </div>
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">Chat Interface</h4>
+                            <p class="text-gray-300">The chat interface allows for both text and voice interactions, making it easy to communicate with KRACHET. Messages are displayed in a clean, modern format with clear visual distinction between user and AI responses.</p>
+                        </div>
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">Context Awareness</h4>
+                            <p class="text-gray-300">KRACHET maintains context throughout your conversation, allowing for more natural and coherent interactions. The system remembers previous exchanges and can reference them in future responses.</p>
+                        </div>
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">Multi-language Support</h4>
+                            <p class="text-gray-300">KRACHET supports multiple languages and can switch between them seamlessly. You can change the language settings at any time through the interface.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="help-card">
+                    <h3 class="text-xl font-semibold mb-4 glow-text">Troubleshooting</h3>
+                    <div class="space-y-4">
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">Microphone Issues</h4>
+                            <p class="text-gray-300">If your microphone isn't working, check your browser permissions and ensure your microphone is properly connected. Try refreshing the page and granting permissions again if needed.</p>
+                        </div>
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">Connection Problems</h4>
+                            <p class="text-gray-300">If you're experiencing connection issues, check your internet connection and try refreshing the page. Ensure you have a stable internet connection for optimal performance.</p>
+                        </div>
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">Response Delays</h4>
+                            <p class="text-gray-300">If you notice delays in responses, it might be due to high server load or network latency. Try clearing your browser cache or switching to a different network if the issue persists.</p>
+                        </div>
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">Voice Recognition Accuracy</h4>
+                            <p class="text-gray-300">If you're experiencing issues with voice recognition accuracy, try speaking clearly and in a quiet environment. The system works best with clear audio input and minimal background noise.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="help-card">
+                    <h3 class="text-xl font-semibold mb-4 glow-text">Privacy & Security</h3>
+                    <div class="space-y-4">
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">Data Protection</h4>
+                            <p class="text-gray-300">KRACHET takes your privacy seriously. All conversations are encrypted and processed securely. We don't store personal information unless explicitly required for service functionality.</p>
+                        </div>
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">Voice Data</h4>
+                            <p class="text-gray-300">Voice data is processed in real-time and is not stored on our servers. The system uses temporary processing to understand and respond to your commands.</p>
+                        </div>
+                        <div class="help-item">
+                            <h4 class="text-lg font-medium mb-2">Account Security</h4>
+                            <p class="text-gray-300">Your account and personal information are protected with industry-standard security measures. We regularly update our security protocols to ensure your data remains safe.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r p-4 mt-8 border-t border-[#0095ff]/10">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <p class="text-gray-400">© 2024 KRACHET. All rights reserved.</p>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-gray-400">Created by <span class="text-[#0095ff]">AIWorks</span></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html> 

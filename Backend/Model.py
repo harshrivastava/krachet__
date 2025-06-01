@@ -3,28 +3,27 @@ from rich import print
 from dotenv import dotenv_values
 import sys
 
-env_vars = dotenv_values(".env")
+class FirstLayerDMM:
+    def __init__(self):
+        env_vars = dotenv_values(".env")
+        self.cohere_api_key = env_vars.get("CohereAPIKey")
+        if not self.cohere_api_key:
+            print("[red]Error: CohereAPIKey not found in .env file[/red]")
+            sys.exit(1)
 
-CohereAPIKey = env_vars.get("CohereAPIKey")
-if not CohereAPIKey:
-    print("[red]Error: CohereAPIKey not found in .env file[/red]")
-    sys.exit(1)
+        try:
+            self.co = cohere.Client(api_key=self.cohere_api_key)
+        except Exception as e:
+            print(f"[red]Error initializing Cohere client: {str(e)}[/red]")
+            sys.exit(1)
 
-try:
-    co = cohere.Client(api_key=CohereAPIKey)
-except Exception as e:
-    print(f"[red]Error initializing Cohere client: {str(e)}[/red]")
-    sys.exit(1)
+        self.funcs = [
+            "exit", "general", "realtime", "open", "close", "play",
+            "generate image", "system", "content", "google search", 
+            "youtube search", "reminder"
+        ]
 
-funcs= [
-    "exit","general","realtime", "open", "close", "play",
-    "generate image","system","content","google search", "youtube search","reminder"
-]
-
-messages=[]
-
-# preamble =""""""
-preamble = """
+        self.preamble = """
 You are a very accurate Decision-Making Model, which decides what kind of a query is given to you.
 You will decide whether a query is a 'general' query, a 'realtime' query, or is asking to perform any task or automation like 'open facebook, instagram', 'can you write a application and open it in notepad'
 *** Do not answer any query, just decide what kind of query is given to you. ***
@@ -43,72 +42,67 @@ You will decide whether a query is a 'general' query, a 'realtime' query, or is 
 *** If the user is saying goodbye or wants to end the conversation like 'bye jarvis.' respond with 'exit'.***
 *** Respond with 'general (query)' if you can't decide the kind of query or if a query is asking to perform a task which is not mentioned above. ***
 """
-ChatHistory =[
-    {"role": "User", "message": "how are you?"},
-    {"role": "Chatbot", "message": "general how are you?"},
 
-    {"role": "User", "message": "do you like pizza?"},
-    {"role": "Chatbot", "message": "general do you like pizza?"},
+    def __call__(self, query):
+        """Process a query and return the decision."""
+        try:
+            # Use Cohere to classify the query
+            response = self.co.classify(
+                model='large',
+                inputs=[query],
+                examples=[
+                    {"text": "who was akbar?", "label": "general"},
+                    {"text": "what's the time?", "label": "general"},
+                    {"text": "who is the current prime minister?", "label": "realtime"},
+                    {"text": "open chrome", "label": "open"},
+                    {"text": "close notepad", "label": "close"},
+                    {"text": "play let her go", "label": "play"},
+                    {"text": "generate image of a cat", "label": "generate"},
+                    {"text": "set a reminder for tomorrow", "label": "reminder"},
+                    {"text": "mute the volume", "label": "system"},
+                    {"text": "write a letter", "label": "content"},
+                    {"text": "search for python tutorials", "label": "google search"},
+                    {"text": "find cooking videos", "label": "youtube search"}
+                ]
+            )
 
-    {"role": "User", "message": "open chrome and tell me about mahatma gandhi."},
-    {"role": "Chatbot", "message": "open chrome, general tell me about mahatma gandhi."},
+            # Get the prediction
+            prediction = response.classifications[0].prediction
+            confidence = response.classifications[0].confidence
 
-    {"role": "User", "message": "open chrome and firefox"},
-    {"role": "Chatbot", "message": "open chrome and open firefox"},
+            # If confidence is low, default to general
+            if confidence < 0.5:
+                return [f"general {query}"]
 
-    {"role": "User", "message": "what is today's date and remind me that i have a dancing performance on 5th aug at 11 pm"},
-    {"role": "Chatbot", "message": "general what is today's date, reminder 11:00pm 5th aug dancing performance"},
+            # Return the appropriate decision
+            if prediction == "general":
+                return [f"general {query}"]
+            elif prediction == "realtime":
+                return [f"realtime {query}"]
+            elif prediction == "open":
+                return [f"open {query.split('open ')[1]}"]
+            elif prediction == "close":
+                return [f"close {query.split('close ')[1]}"]
+            elif prediction == "play":
+                return [f"play {query.split('play ')[1]}"]
+            elif prediction == "generate":
+                return [f"generate {query.split('generate ')[1]}"]
+            elif prediction == "reminder":
+                return [f"reminder {query.split('reminder ')[1]}"]
+            elif prediction == "system":
+                return [f"system {query.split('system ')[1]}"]
+            elif prediction == "content":
+                return [f"content {query.split('content ')[1]}"]
+            elif prediction == "google search":
+                return [f"google search {query.split('search ')[1]}"]
+            elif prediction == "youtube search":
+                return [f"youtube search {query.split('search ')[1]}"]
+            else:
+                return [f"general {query}"]
 
-    {"role": "User", "message": "chat with me."},
-    {"role": "Chatbot", "message": "general chat with me."}
-
-]
-
-def FirstLayerDMM(prompt: str="test"):
-    try:
-        messages.append({"role":"user","content": f"{prompt}"})
-
-        stream = co.chat_stream(
-            model='command-r-plus',
-            message=prompt,
-            temperature=0.7,
-            chat_history=ChatHistory,
-            prompt_truncation='OFF',
-            connectors=[],
-            preamble=preamble
-        )
-
-        response = ""
-
-        for event in stream:
-            if event.event_type == "text-generation":
-                response += event.text
-
-        response = response.replace("\n","")
-        response = response.split(",")
-
-        response = [i.strip() for i in response]
-
-        temp = []
-
-        for task in response:
-            for func in funcs:
-                if task.startswith(func):
-                    temp.append(task)
-
-        response = temp
-
-        if "(query)" in response:
-            # Add a safety check to prevent infinite recursion
-            if len(messages) > 10:  # Arbitrary limit to prevent infinite recursion
-                return ["general " + prompt]
-            newresponse = FirstLayerDMM(prompt=prompt)
-            return newresponse
-        else:
-            return response
-    except Exception as e:
-        print(f"[red]Error in FirstLayerDMM: {str(e)}[/red]")
-        return ["general " + prompt]
+        except Exception as e:
+            print(f"[red]Error in FirstLayerDMM: {str(e)}[/red]")
+            return [f"general {query}"]
 
 if __name__ == "__main__":
     while True:
@@ -116,7 +110,7 @@ if __name__ == "__main__":
             user_input = input(">>> ")
             if user_input.lower() in ['exit', 'quit', 'bye']:
                 break
-            print(FirstLayerDMM(user_input))
+            print(FirstLayerDMM()(user_input))
         except KeyboardInterrupt:
             print("\nGoodbye!")
             break

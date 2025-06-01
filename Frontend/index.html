@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRACHET</title>
+    <link rel="icon" type="image/x-icon" href="Assets/icon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen">
+    <!-- Top Bar -->
+    <div class="bg-gradient-to-r p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <div class="title-container">
+                <img src="Assets/icon.ico" alt="KRACHET" class="top-bar-icon">
+                <h1 class="text-xl animated-gradient">KRACHET</h1>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button id="homeBtn" class="px-4 py-2 bg-[#0095ff]/10 hover:bg-[#0095ff]/20 rounded transition-all">
+                <span class="flex items-center text-white">
+                    <i class="fas fa-home w-5 h-5 mr-2"></i>
+                    Home
+                </span>
+            </button>
+            <button id="chatBtn" class="px-4 py-2 bg-[#0095ff]/10 hover:bg-[#0095ff]/20 rounded transition-all">
+                <span class="flex items-center text-white">
+                    <i class="fas fa-comments w-5 h-5 mr-2"></i>
+                    Chat
+                </span>
+            </button>
+            <button onclick="window.location.href='about.html'" class="px-4 py-2 bg-[#0095ff]/10 hover:bg-[#0095ff]/20 rounded transition-all">
+                <span class="flex items-center text-white">
+                    <i class="fas fa-info-circle w-5 h-5 mr-2"></i>
+                    About
+                </span>
+            </button>
+            <button onclick="window.location.href='help.html'" class="px-4 py-2 bg-[#0095ff]/10 hover:bg-[#0095ff]/20 rounded transition-all">
+                <span class="flex items-center text-white">
+                    <i class="fas fa-question-circle w-5 h-5 mr-2"></i>
+                    Help
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-4">
+        <!-- Home Screen -->
+        <div id="homeScreen" class="flex flex-col items-center justify-center min-h-[calc(100vh-80px)]">
+            <div class="w-full max-w-4xl text-center">
+                <div class="orb-container mx-auto mb-8 cursor-pointer" onclick="startListening()">
+                    <div class="orb"></div>
+                    <div class="orb-glow"></div>
+                    <div class="orb-particles"></div>
+                </div>
+                <h2 class="text-3xl animated-gradient">KRACHET</h2>
+                <p class="text-xl glow-text">Your intelligent companion</p>
+            </div>
+            <div class="mt-8 text-center">
+                <div class="mic-container">
+                    <div class="status-container">
+                        <p id="statusText"></p>
+                    </div>
+                    <button id="micButton" class="focus-ring">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Screen -->
+        <div id="chatScreen" class="hidden min-h-[calc(100vh-80px)]">
+            <div class="bg-[#1a1a2e]/50 backdrop-blur-lg rounded-lg p-4 h-[calc(100vh-120px)] flex flex-col border border-[#0095ff]/20">
+                <div id="chatMessages" class="flex-1 overflow-y-auto mb-4 space-y-4">
+                    <!-- Messages will be added here dynamically -->
+                </div>
+                <div class="flex items-center space-x-4">
+                    <input type="text" id="messageInput" 
+                           class="flex-1 bg-[#16213e]/50 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#0095ff] border border-[#0095ff]/20"
+                           placeholder="Type your message...">
+                    <button id="sendButton" class="px-6 py-2 bg-[#0095ff] text-white rounded-lg hover:bg-[#0066cc] transition-all">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r p-4 mt-8 border-t border-[#0095ff]/10">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <p class="text-gray-400">© 2024 KRACHET. All rights reserved.</p>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-gray-400">Created by <span class="text-[#0095ff]">AIWorks</span></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html> 

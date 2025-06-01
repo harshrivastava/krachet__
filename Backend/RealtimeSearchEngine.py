@@ -5,6 +5,10 @@ from json import load, dump
 import datetime
 from dotenv import dotenv_values
 import os
+import requests
+from bs4 import BeautifulSoup
+from rich import print
+import sys
 
 # Ensure Data directory exists
 if not os.path.exists("Data"):
@@ -84,6 +88,56 @@ def Information():
     data += f"Year: {year}\n"
     data += f"Time: {hour} hours, {minute} minutes, {second} seconds.\n"
     return data
+
+class RealtimeSearchEngine:
+    def __init__(self):
+        self.headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+
+    def search(self, query):
+        """Perform a real-time web search and return relevant information."""
+        try:
+            # Format the query for Google search
+            search_url = f"https://www.google.com/search?q={query.replace(' ', '+')}"
+            
+            # Make the request
+            response = requests.get(search_url, headers=self.headers)
+            response.raise_for_status()
+            
+            # Parse the response
+            soup = BeautifulSoup(response.text, 'html.parser')
+            
+            # Extract search results
+            search_results = []
+            
+            # Get featured snippet if available
+            featured_snippet = soup.find('div', {'class': 'kno-rdesc'})
+            if featured_snippet:
+                search_results.append(featured_snippet.get_text().strip())
+            
+            # Get regular search results
+            for result in soup.find_all('div', {'class': 'g'})[:3]:  # Get top 3 results
+                title = result.find('h3')
+                snippet = result.find('div', {'class': 'VwiC3b'})
+                
+                if title and snippet:
+                    search_results.append(f"{title.get_text()}: {snippet.get_text()}")
+            
+            if not search_results:
+                return "I couldn't find any relevant information for your query."
+            
+            # Combine results into a single response
+            return "Here's what I found:\n" + "\n".join(search_results)
+
+        except requests.RequestException as e:
+            error_msg = f"Error performing web search: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            return "I encountered an error while searching for information. Please try again."
+        except Exception as e:
+            error_msg = f"Unexpected error in search: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            return "An unexpected error occurred. Please try again."
 
 def RealtimeSearchEngine(prompt):
     global SystemChatBot, messages

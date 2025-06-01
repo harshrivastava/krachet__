@@ -11,6 +11,11 @@ import requests
 import keyboard
 import asyncio
 import os
+import pyautogui
+import time
+import schedule
+import threading
+from datetime import datetime
 
 
 env_vars= dotenv_values(".env")
@@ -81,7 +86,6 @@ def YoutubeSearch(Topic):
 def PlayYoutube(query):
     playonyt(query)
     return True
-PlayYoutube("hikaru nara")
 def OpenApp(app, sess=requests.session()):
     try:
         # First try using AppOpener
@@ -196,3 +200,173 @@ async def Automation(commands:list[str]):
     async for result in TranslateAndExecute(commands):
         pass
     return True
+
+class Automation:
+    def __init__(self):
+        self.reminders = {}
+        self.reminder_thread = None
+        self.start_reminder_thread()
+
+    def start_reminder_thread(self):
+        """Start a background thread to check for reminders."""
+        def check_reminders():
+            while True:
+                schedule.run_pending()
+                time.sleep(1)
+
+        self.reminder_thread = threading.Thread(target=check_reminders, daemon=True)
+        self.reminder_thread.start()
+
+    def open_application(self, app_name):
+        """Open an application or website."""
+        try:
+            # Common applications mapping
+            app_mapping = {
+                'chrome': 'chrome.exe',
+                'firefox': 'firefox.exe',
+                'edge': 'msedge.exe',
+                'notepad': 'notepad.exe',
+                'calculator': 'calc.exe',
+                'word': 'winword.exe',
+                'excel': 'excel.exe',
+                'powerpoint': 'powerpnt.exe',
+                'facebook': 'https://www.facebook.com',
+                'youtube': 'https://www.youtube.com',
+                'google': 'https://www.google.com',
+                'gmail': 'https://mail.google.com',
+                'github': 'https://github.com',
+                'linkedin': 'https://www.linkedin.com',
+                'twitter': 'https://twitter.com',
+                'instagram': 'https://www.instagram.com'
+            }
+
+            # Check if it's a website
+            if app_name in app_mapping and app_mapping[app_name].startswith('http'):
+                webbrowser.open(app_mapping[app_name])
+                return
+
+            # Check if it's a known application
+            if app_name in app_mapping:
+                subprocess.Popen(app_mapping[app_name])
+                return
+
+            # Try to open as a website
+            if not app_name.startswith(('http://', 'https://')):
+                app_name = f'https://www.{app_name}'
+            webbrowser.open(app_name)
+
+        except Exception as e:
+            error_msg = f"Error opening application: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            raise
+
+    def close_application(self, app_name):
+        """Close an application."""
+        try:
+            # Common applications mapping
+            app_mapping = {
+                'chrome': 'chrome.exe',
+                'firefox': 'firefox.exe',
+                'edge': 'msedge.exe',
+                'notepad': 'notepad.exe',
+                'calculator': 'calc.exe',
+                'word': 'winword.exe',
+                'excel': 'excel.exe',
+                'powerpoint': 'powerpnt.exe'
+            }
+
+            if app_name in app_mapping:
+                os.system(f'taskkill /f /im {app_mapping[app_name]}')
+            else:
+                os.system(f'taskkill /f /im {app_name}.exe')
+
+        except Exception as e:
+            error_msg = f"Error closing application: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            raise
+
+    def play_music(self, song_name):
+        """Play music on YouTube."""
+        try:
+            search_url = f'https://www.youtube.com/results?search_query={song_name.replace(" ", "+")}'
+            webbrowser.open(search_url)
+        except Exception as e:
+            error_msg = f"Error playing music: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            raise
+
+    def generate_image(self, prompt):
+        """Generate an image using DALL-E."""
+        try:
+            # TODO: Implement DALL-E integration
+            return "Image generation is not implemented yet."
+        except Exception as e:
+            error_msg = f"Error generating image: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            raise
+
+    def set_reminder(self, reminder_text):
+        """Set a reminder with the given text."""
+        try:
+            # Parse reminder text to extract time
+            # Format: "reminder HH:MM DD/MM/YYYY message"
+            parts = reminder_text.split()
+            if len(parts) < 3:
+                raise ValueError("Invalid reminder format")
+
+            time_str = parts[0]
+            date_str = parts[1]
+            message = " ".join(parts[2:])
+
+            # Parse date and time
+            reminder_time = datetime.strptime(f"{date_str} {time_str}", "%d/%m/%Y %H:%M")
+
+            # Schedule the reminder
+            def reminder_job():
+                print(f"[yellow]REMINDER: {message}[/yellow]")
+                # TODO: Add notification
+
+            schedule.every().day.at(reminder_time.strftime("%H:%M")).do(reminder_job)
+
+            return f"Reminder set for {reminder_time.strftime('%H:%M on %d/%m/%Y')}: {message}"
+
+        except Exception as e:
+            error_msg = f"Error setting reminder: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            raise
+
+    def execute_system_command(self, command):
+        """Execute a system command."""
+        try:
+            if command.lower() in ['mute', 'unmute']:
+                pyautogui.press('volumemute')
+            elif command.lower() == 'volume up':
+                pyautogui.press('volumeup')
+            elif command.lower() == 'volume down':
+                pyautogui.press('volumedown')
+            else:
+                os.system(command)
+        except Exception as e:
+            error_msg = f"Error executing system command: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            raise
+
+    def google_search(self, query):
+        """Perform a Google search."""
+        try:
+            search_url = f'https://www.google.com/search?q={query.replace(" ", "+")}'
+            webbrowser.open(search_url)
+        except Exception as e:
+            error_msg = f"Error performing Google search: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            raise
+
+    def youtube_search(self, query):
+        """Perform a YouTube search."""
+        try:
+            search_url = f'https://www.youtube.com/results?search_query={query.replace(" ", "+")}'
+            webbrowser.open(search_url)
+        except Exception as e:
+            error_msg = f"Error performing YouTube search: {str(e)}"
+            print(f"[red]{error_msg}[/red]")
+            raise

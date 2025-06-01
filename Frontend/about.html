@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRACHET - About</title>
+    <link rel="icon" type="image/x-icon" href="Assets/icon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen">
+    <!-- Top Bar -->
+    <div class="bg-gradient-to-r p-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <div class="title-container">
+                <img src="Assets/icon.ico" alt="KRACHET" class="top-bar-icon">
+                <h1 class="text-xl animated-gradient">KRACHET</h1>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button onclick="window.location.href='index.html'" class="px-4 py-2 bg-[#0095ff]/10 hover:bg-[#0095ff]/20 rounded transition-all">
+                <span class="flex items-center text-white">
+                    <i class="fas fa-home w-5 h-5 mr-2"></i>
+                    Home
+                </span>
+            </button>
+            <button onclick="window.location.href='help.html'" class="px-4 py-2 bg-[#0095ff]/10 hover:bg-[#0095ff]/20 rounded transition-all">
+                <span class="flex items-center text-white">
+                    <i class="fas fa-question-circle w-5 h-5 mr-2"></i>
+                    Help
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl animated-gradient mb-8 text-center">About KRACHET</h2>
+            
+            <!-- Mission Section -->
+            <div class="about-card mb-8">
+                <h3 class="text-xl font-semibold mb-4 glow-text">Our Mission</h3>
+                <p class="text-gray-300 leading-relaxed">
+                    KRACHET is designed to revolutionize human-AI interaction through advanced natural language processing and voice recognition technology. Our mission is to create an intuitive, responsive, and intelligent assistant that seamlessly integrates into your daily life.
+                </p>
+                <p class="text-gray-300 leading-relaxed mt-4">
+                    We believe in making AI technology accessible to everyone, focusing on creating meaningful connections between humans and artificial intelligence. Our goal is to develop an AI companion that understands context, learns from interactions, and provides valuable assistance while maintaining privacy and security.
+                </p>
+            </div>
+
+            <!-- Interactive Timeline -->
+            <div class="about-card mb-8">
+                <h3 class="text-xl font-semibold mb-4 glow-text">Our Journey</h3>
+                <div class="timeline">
+                    <div class="timeline-item" onclick="toggleTimelineItem(this)">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4 class="text-lg font-medium mb-2">2023 - Project Inception</h4>
+                            <p class="text-gray-300">Initial concept development and research into AI voice interaction technologies.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item" onclick="toggleTimelineItem(this)">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4 class="text-lg font-medium mb-2">2024 - KRACHET Launch</h4>
+                            <p class="text-gray-300">Official release of KRACHET with advanced voice recognition and natural language processing capabilities.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item" onclick="toggleTimelineItem(this)">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4 class="text-lg font-medium mb-2">Future Vision</h4>
+                            <p class="text-gray-300">Plans for enhanced AI capabilities, multi-language support, and expanded integration options.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="about-card mb-8">
+                <h3 class="text-xl font-semibold mb-4 glow-text">Key Features</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="feature-item" onmouseover="animateFeature(this)" onmouseout="resetFeature(this)">
+                        <i class="fas fa-microphone text-2xl text-[#0095ff] mb-3"></i>
+                        <h4 class="text-lg font-medium mb-2">Voice Recognition</h4>
+                        <p class="text-gray-300">Advanced voice recognition technology for natural interaction with 99% accuracy in speech-to-text conversion.</p>
+                    </div>
+                    <div class="feature-item" onmouseover="animateFeature(this)" onmouseout="resetFeature(this)">
+                        <i class="fas fa-brain text-2xl text-[#0095ff] mb-3"></i>
+                        <h4 class="text-lg font-medium mb-2">AI-Powered</h4>
+                        <p class="text-gray-300">State-of-the-art AI algorithms for intelligent responses and continuous learning capabilities.</p>
+                    </div>
+                    <div class="feature-item" onmouseover="animateFeature(this)" onmouseout="resetFeature(this)">
+                        <i class="fas fa-comments text-2xl text-[#0095ff] mb-3"></i>
+                        <h4 class="text-lg font-medium mb-2">Natural Language</h4>
+                        <p class="text-gray-300">Natural language processing for human-like conversations with context awareness and emotional intelligence.</p>
+                    </div>
+                    <div class="feature-item" onmouseover="animateFeature(this)" onmouseout="resetFeature(this)">
+                        <i class="fas fa-bolt text-2xl text-[#0095ff] mb-3"></i>
+                        <h4 class="text-lg font-medium mb-2">Real-time Response</h4>
+                        <p class="text-gray-300">Lightning-fast response times with optimized processing for seamless interaction.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technology Section -->
+            <div class="about-card mb-8">
+                <h3 class="text-xl font-semibold mb-4 glow-text">Technology</h3>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Built with cutting-edge technology, KRACHET combines advanced machine learning algorithms with sophisticated natural language processing to deliver an exceptional user experience. Our system continuously learns and improves to provide better assistance.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-badge">Machine Learning</span>
+                    <span class="tech-badge">Natural Language Processing</span>
+                    <span class="tech-badge">Voice Recognition</span>
+                    <span class="tech-badge">Real-time Processing</span>
+                    <span class="tech-badge">Neural Networks</span>
+                    <span class="tech-badge">Deep Learning</span>
+                </div>
+            </div>
+
+            <!-- Interactive Stats -->
+            <div class="about-card">
+                <h3 class="text-xl font-semibold mb-4 glow-text">Our Impact</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="stat-card" onclick="animateStat(this)">
+                        <div class="stat-number" data-value="99">0</div>
+                        <div class="stat-label">Accuracy Rate</div>
+                    </div>
+                    <div class="stat-card" onclick="animateStat(this)">
+                        <div class="stat-number" data-value="50">0</div>
+                        <div class="stat-label">Languages Supported</div>
+                    </div>
+                    <div class="stat-card" onclick="animateStat(this)">
+                        <div class="stat-number" data-value="1">0</div>
+                        <div class="stat-label">Second Response Time</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r p-4 mt-8 border-t border-[#0095ff]/10">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <p class="text-gray-400">© 2024 KRACHET. All rights reserved.</p>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-gray-400">Created by <span class="text-[#0095ff]">AIWorks</span></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        // Timeline interaction
+        function toggleTimelineItem(element) {
+            element.classList.toggle('active');
+        }
+
+        // Feature animation
+        function animateFeature(element) {
+            element.style.transform = 'translateY(-10px)';
+            element.style.boxShadow = '0 10px 20px rgba(0, 149, 255, 0.2)';
+        }
+
+        function resetFeature(element) {
+            element.style.transform = 'translateY(0)';
+            element.style.boxShadow = 'none';
+        }
+
+        // Stats animation
+        function animateStat(element) {
+            const numberElement = element.querySelector('.stat-number');
+            const targetValue = parseInt(numberElement.getAttribute('data-value'));
+            let currentValue = 0;
+            const duration = 2000;
+            const interval = 20;
+            const increment = targetValue / (duration / interval);
+
+            const counter = setInterval(() => {
+                currentValue += increment;
+                if (currentValue >= targetValue) {
+                    numberElement.textContent = targetValue;
+                    clearInterval(counter);
+                } else {
+                    numberElement.textContent = Math.floor(currentValue);
+                }
+            }, interval);
+        }
+    </script>
+</body>
+</html> 
