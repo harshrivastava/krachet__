@@ -4,7 +4,7 @@ flask-cors==4.0.0
 
 # Environment and Utilities
 python-dotenv==1.0.1
-requests==2.31.0
+requests==2.32.4
 
 # Speech and Text Processing
 SpeechRecognition==3.10.1
