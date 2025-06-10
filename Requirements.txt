@@ -1,6 +1,6 @@
 # Web Framework
 Flask==3.0.2
-flask-cors==4.0.0
+flask-cors==6.0.0
 
 # Environment and Utilities
 python-dotenv==1.0.1
